@@ -1,0 +1,154 @@
+CREATE TABLE `customer` (
+  `email_id` varchar(255) PRIMARY KEY,
+  `contact_num` int,
+  `admin_id` int
+);
+
+CREATE TABLE `customer_login` (
+  `username` varchar(255) PRIMARY KEY,
+  `password` varchar(255),
+  `id` varchar(255)
+);
+
+CREATE TABLE `customer_name` (
+  `email_id` varchar(255) PRIMARY KEY,
+  `first_name` varchar(255),
+  `middle_name` varchar(255),
+  `last_name` varchar(255)
+);
+
+CREATE TABLE `customer_address` (
+  `email_id` varchar(255) PRIMARY KEY,
+  `address` longtext
+);
+
+CREATE TABLE `employee` (
+  `employee_id` int PRIMARY KEY,
+  `email_id` varchar(255),
+  `contact_num` int,
+  `admin_id` int,
+  `centre_id` int
+);
+
+CREATE TABLE `employee_login` (
+  `username` varchar(255) PRIMARY KEY,
+  `password` varchar(255),
+  `id` int
+);
+
+CREATE TABLE `employee_address` (
+  `employee_id` int PRIMARY KEY,
+  `address` longtext
+);
+
+CREATE TABLE `employee_name` (
+  `employee_id` int PRIMARY KEY,
+  `first_name` varchar(255),
+  `middle_name` varchar(255),
+  `last_name` varchar(255)
+);
+
+CREATE TABLE `administrator` (
+  `admin_id` int PRIMARY KEY,
+  `first_name` varchar(255),
+  `middle_name` varchar(255),
+  `last_name` varchar(255),
+  `email_id` varchar(255),
+  `contact_num` int,
+  `centre_id` int
+);
+
+CREATE TABLE `admin_login` (
+  `username` varchar(255) PRIMARY KEY,
+  `password` varchar(255),
+  `id` int
+);
+
+CREATE TABLE `admin_name` (
+  `admin_id` int PRIMARY KEY,
+  `first_name` varchar(255),
+  `middle_name` varchar(255),
+  `last_name` varchar(255)
+);
+
+CREATE TABLE `admin_address` (
+  `admin_id` int PRIMARY KEY,
+  `address` longtext
+);
+
+CREATE TABLE `courier_distrirbution_centre` (
+  `centre_id` int PRIMARY KEY,
+  `centre_name` varchar(255)
+);
+
+CREATE TABLE `centre_address` (
+  `centre_id` int PRIMARY KEY,
+  `centre_address` longtext,
+  `centre_pincode` int,
+  `centre_latitude` float8,
+  `centre_longitude` float8
+);
+
+CREATE TABLE `courier` (
+  `order_num` int PRIMARY KEY,
+  `weight` int,
+  `type_of_service` varchar(255),
+  `type_of_transaction` varchar(255),
+  `tracking_id` int
+);
+
+CREATE TABLE `recepient` (
+  `email_id` varchar(255) PRIMARY KEY,
+  `first_name` varchar(255),
+  `middle_name` varchar(255),
+  `last_name` varchar(255),
+  `contact_num` int,
+  `address` longtext,
+  `tracking_id` int
+);
+
+CREATE TABLE `order` (
+  `tracking_id` int PRIMARY KEY,
+  `order_date` varchar(255),
+  `delivery_date` varchar(255),
+  `order_cost` int,
+  `order_status` varchar(255),
+  `employee_id` int,
+  `centre_id` int
+);
+
+ALTER TABLE `admin_login` ADD CONSTRAINT `admin_login` FOREIGN KEY (`id`) REFERENCES `administrator` (`admin_id`);
+
+ALTER TABLE `customer_login` ADD CONSTRAINT `cust_login` FOREIGN KEY (`id`) REFERENCES `customer` (`email_id`);
+
+ALTER TABLE `employee_login` ADD CONSTRAINT `employee_login` FOREIGN KEY (`id`) REFERENCES `employee` (`employee_id`);
+
+ALTER TABLE `admin_name` ADD CONSTRAINT `admin_name` FOREIGN KEY (`admin_id`) REFERENCES `administrator` (`admin_id`);
+
+ALTER TABLE `employee_name` ADD CONSTRAINT `employee_name` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
+
+ALTER TABLE `customer_name` ADD CONSTRAINT `customer_name` FOREIGN KEY (`email_id`) REFERENCES `customer` (`email_id`);
+
+ALTER TABLE `admin_address` ADD CONSTRAINT `admin_address` FOREIGN KEY (`admin_id`) REFERENCES `administrator` (`admin_id`);
+
+ALTER TABLE `employee_address` ADD CONSTRAINT `employee_address` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
+
+ALTER TABLE `customer_address` ADD CONSTRAINT `customer_address` FOREIGN KEY (`email_id`) REFERENCES `customer` (`email_id`);
+
+ALTER TABLE  `administrator` ADD CONSTRAINT `admin_centre` FOREIGN KEY (`centre_id`) REFERENCES `courier_distrirbution_centre` (`centre_id`);
+
+ALTER TABLE `employee` ADD CONSTRAINT `employee_centre` FOREIGN KEY (`centre_id`) REFERENCES `courier_distrirbution_centre` (`centre_id`);
+
+ALTER TABLE `employee` ADD CONSTRAINT `administers` FOREIGN KEY (`admin_id`) REFERENCES `administrator` (`admin_id`);
+
+ALTER TABLE `customer` ADD CONSTRAINT `manages` FOREIGN KEY (`admin_id`) REFERENCES `administrator` (`admin_id`);
+
+ALTER TABLE `courier` ADD CONSTRAINT `order_courier` FOREIGN KEY (`tracking_id`) REFERENCES `order`(`tracking_id`);
+
+ALTER TABLE `recepient` ADD CONSTRAINT `order_recepient` FOREIGN KEY (`tracking_id`) REFERENCES `order` (`tracking_id`);
+
+ALTER TABLE `order` ADD CONSTRAINT `order_centre` FOREIGN KEY (`centre_id`) REFERENCES `courier_distrirbution_centre` (`centre_id`);
+
+ALTER TABLE `order` ADD CONSTRAINT `order_employee` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
+
+ALTER TABLE `courier_distrirbution_centre` ADD CONSTRAINT `centre_address` FOREIGN KEY (`centre_id`) REFERENCES `centre_address` (`centre_id`);
